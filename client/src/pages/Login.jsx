@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLoginUserMutation, useRegisterUserMutation } from "@/api/authApi";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const Login = () => {
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
@@ -52,7 +53,19 @@ const Login = () => {
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   };
-  useEffect(() => {}, [
+  useEffect(() => {
+    if (registerSuccess && registerData) {
+      toast.success("User registered successfully!");
+    } else if (registerError) {
+      toast.error(registerData.data.message || "Something went wrong!");
+    }
+    if (loginSuccess && loginData) {
+      toast.success("logged in successfully!");
+    } else if (loginError) {
+      toast.error(loginData.data.message || "login failed!");
+    }
+      
+  }, [
     loginLoading,
     registerLoading,
     loginData,
